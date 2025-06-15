@@ -20,7 +20,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@users/*": ["src/modules/user/*"],
-      "@projects/*": ["src/modules/project/*"]
+      "@projects/*": ["src/modules/project/*"],
+      "@auth/*": ["src/modules/auth/*"]
     }
   }
 }
