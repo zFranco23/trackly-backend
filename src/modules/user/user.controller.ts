@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 
@@ -21,5 +22,13 @@ export class UserController {
   @Get(':id')
   getUser(@Param('id') id: string): Promise<User | null> {
     return this.usersService.getUser(id);
+  }
+
+  @Put(':id')
+  updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<User | null> {
+    return this.usersService.updateUser(id, updateUserDto);
   }
 }

@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -32,5 +33,17 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found.`);
     }
     return user;
+  }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.getUser(id);
+
+    Object.assign(user, {
+      email: updateUserDto.email,
+      name: updateUserDto.name,
+      lastName: updateUserDto.lastName,
+    });
+
+    return this.userRepository.save(user);
   }
 }
