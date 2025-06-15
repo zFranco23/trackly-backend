@@ -1,10 +1,11 @@
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -13,9 +14,31 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto) {
-    const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+  async createUser(
+    createUserDto: CreateUserDto,
+  ): Promise<Omit<User, 'password'>> {
+    const { email, ...restUserData } = createUserDto;
+
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException('User already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(restUserData.password, 10);
+
+    const user = this.userRepository.create({
+      ...restUserData,
+      email,
+      password: hashedPassword,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...restNewUserData } =
+      await this.userRepository.save(user);
+    return restNewUserData;
   }
 
   async getUsers() {
@@ -27,6 +50,7 @@ export class UserService {
   async getUserByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
+      select: ['id', 'email', 'name', 'lastName', 'password'],
     });
   }
 
@@ -41,8 +65,11 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.getUser(id);
+  async updateUser(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<Omit<User, 'password'>> {
+    const user = await this.getUser(userId);
 
     Object.assign(user, {
       email: updateUserDto.email,
@@ -50,6 +77,9 @@ export class UserService {
       lastName: updateUserDto.lastName,
     });
 
-    return this.userRepository.save(user);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...restNewUserData } =
+      await this.userRepository.save(user);
+    return restNewUserData;
   }
 }

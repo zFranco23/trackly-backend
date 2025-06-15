@@ -21,7 +21,8 @@
       "@/*": ["src/*"],
       "@users/*": ["src/modules/user/*"],
       "@projects/*": ["src/modules/project/*"],
-      "@auth/*": ["src/modules/auth/*"]
+      "@auth/*": ["src/modules/auth/*"],
+      "@security/*": ["src/modules/security/*"]
     }
   }
 }
