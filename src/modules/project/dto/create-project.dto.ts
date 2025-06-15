@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsUrl,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -22,10 +16,4 @@ export class CreateProjectDto {
     message: 'Repository URL must be a valid URL',
   })
   repository: string;
-
-  @IsString()
-  @IsNotEmpty({
-    message: 'User ID is required',
-  })
-  userId: string;
 }

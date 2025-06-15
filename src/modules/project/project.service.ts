@@ -13,9 +13,9 @@ export class ProjectService {
     private userService: UserService,
   ) {}
 
-  async getProjects() {
+  async getProjectsByUserId(id: string) {
     return this.projectRepository.find({
-      relations: ['user'],
+      where: { user: { id } },
     });
   }
 
@@ -26,15 +26,14 @@ export class ProjectService {
     });
   }
 
-  async createProject(createProjectDto: CreateProjectDto) {
-    const { userId, ...projectData } = createProjectDto;
-
+  async createProject(userId: string, createProjectDto: CreateProjectDto) {
     const user = await this.userService.getUser(userId);
 
     const project = this.projectRepository.create({
-      ...projectData,
+      ...createProjectDto,
       user,
     });
+
     return this.projectRepository.save(project);
   }
 }

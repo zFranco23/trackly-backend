@@ -27,8 +27,8 @@ export class UserController {
   //   return this.usersService.getUsers();
   // }
 
-  @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Post()
   create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<Omit<User, 'password'>> {
