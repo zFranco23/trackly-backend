@@ -14,13 +14,13 @@ export class AuthService {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     // Check password with bcrypt
     const isPasswordMatched = await bcrypt.compare(pass, user.password);
     if (!isPasswordMatched) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     const payload = { id: user.id, email: user.email, sub: user.id };
