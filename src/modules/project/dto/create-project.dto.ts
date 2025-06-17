@@ -2,6 +2,7 @@ import { IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
+  @MaxLength(50)
   @MinLength(6)
   name: string;
 
