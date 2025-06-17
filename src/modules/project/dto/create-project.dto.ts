@@ -12,9 +12,9 @@ export class CreateProjectDto {
   description: string;
 
   @IsString()
-  @MaxLength(100)
   @IsUrl(undefined, {
     message: 'Repository URL must be a valid URL',
   })
+  @MaxLength(100)
   repository: string;
 }

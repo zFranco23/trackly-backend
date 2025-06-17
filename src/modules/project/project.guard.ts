@@ -2,7 +2,6 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -19,10 +18,6 @@ export class ProjectGuard implements CanActivate {
     const userId = (request['user'] as { id: string }).id;
 
     const project = await this.projectService.getProjectById(projectResourceId);
-
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
 
     if (project.user.id !== userId) {
       throw new UnauthorizedException(

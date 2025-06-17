@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { UserService } from '../user/user.service';
+import { NotFoundException } from '@nestjs/common';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -20,10 +22,16 @@ export class ProjectService {
   }
 
   async getProjectById(id: string) {
-    return this.projectRepository.findOne({
+    const project = await this.projectRepository.findOne({
       where: { id },
       relations: ['user'],
     });
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    return project;
   }
 
   async createProject(userId: string, createProjectDto: CreateProjectDto) {
@@ -33,6 +41,14 @@ export class ProjectService {
       ...createProjectDto,
       user,
     });
+
+    return this.projectRepository.save(project);
+  }
+
+  async updateProject(id: string, updateProjectDto: UpdateProjectDto) {
+    const project = await this.getProjectById(id);
+
+    Object.assign(project, updateProjectDto);
 
     return this.projectRepository.save(project);
   }
