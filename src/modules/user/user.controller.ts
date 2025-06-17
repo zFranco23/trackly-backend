@@ -1,16 +1,16 @@
 import {
   Controller,
   Get,
-  Post,
+  // Post,
   Body,
   Param,
   Put,
-  HttpCode,
-  HttpStatus,
+  // HttpCode,
+  // HttpStatus,
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
@@ -22,13 +22,13 @@ import { UserGuard } from './user.guard';
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
-  @HttpCode(HttpStatus.CREATED)
-  @Post()
-  create(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<Omit<User, 'password'>> {
-    return this.usersService.createUser(createUserDto);
-  }
+  // @HttpCode(HttpStatus.CREATED)
+  // @Post()
+  // create(
+  //   @Body() createUserDto: CreateUserDto,
+  // ): Promise<Omit<User, 'password'>> {
+  //   return this.usersService.createUser(createUserDto);
+  // }
 
   @UseGuards(SecurityGuard)
   @Get('')
