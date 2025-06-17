@@ -8,6 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -21,12 +22,6 @@ import { UserGuard } from './user.guard';
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
-  // TODO: for admin version
-  // @Get()
-  // findAll(): Promise<User[]> {
-  //   return this.usersService.getUsers();
-  // }
-
   @HttpCode(HttpStatus.CREATED)
   @Post()
   create(
@@ -35,10 +30,11 @@ export class UserController {
     return this.usersService.createUser(createUserDto);
   }
 
-  @UseGuards(SecurityGuard, UserGuard)
-  @Get(':id')
-  getUser(@Param('id') id: string): Promise<User> {
-    return this.usersService.getUser(id);
+  @UseGuards(SecurityGuard)
+  @Get('')
+  getUser(@Req() req: Request): Promise<User> {
+    const userId = (req['user'] as { id: string }).id;
+    return this.usersService.getUser(userId);
   }
 
   @UseGuards(SecurityGuard, UserGuard)
