@@ -6,7 +6,7 @@ export class CreateProjectDto {
   name: string;
 
   @IsString()
-  @MaxLength(100)
+  @MaxLength(200)
   @MinLength(10)
   description: string;
 
